@@ -5,7 +5,7 @@
       :props="props"
       :data="userList"
       :titles="['未分配用户', '已分配用户']"
-      :button-texts="['分配', '取消']"
+      :button-texts="['取消', '分配']"
     />
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">

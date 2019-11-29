@@ -77,12 +77,21 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    console.log(JSON.stringify(error))
+    if (error.response.status === 403) {
+      Message({
+        message: '您没有执行此操作的权限!',
+        type: 'error',
+        duration: 5 * 1000
+      })
+    } else {
+      console.log('err' + error) // for debug
+      Message({
+        message: error.message,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
     return Promise.reject(error)
   }
 )

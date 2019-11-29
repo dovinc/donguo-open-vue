@@ -9,7 +9,7 @@ import Layout from '@/layout'
  * 生产环境prod 懒加载require
  * 开发环境dev  非懒加载import
  */
-const _import = require('@/_import/_import_' + process.env.NODE_ENV)
+const _import = require('@/_import/_import_' + process.env.VUE_APP_LOADING_MODE)
 
 // /**
 //  * Use meta.role to determine if the current user has permission
