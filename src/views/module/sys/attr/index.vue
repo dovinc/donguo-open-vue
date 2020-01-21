@@ -24,7 +24,10 @@
       <el-table-column
         type="expand"
       >
-        我是展开行
+        <!-- 展开行数据 -->
+        <template slot-scope="scope">
+          <ItemTable :attr-type-id="scope.row" />
+        </template>
       </el-table-column>
       <el-table-column
         prop="code"
@@ -84,10 +87,12 @@
 <script>
 import { getList, del } from '@/api/sys/attr/attr-type'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import AddOrUpdate from './components/add-or-update'
+import AddOrUpdate from './components/add-or-update-type'
+import ItemTable from './components/attr-item-table'
 
 export default {
   components: {
+    ItemTable,
     AddOrUpdate,
     Pagination
   },

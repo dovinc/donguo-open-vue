@@ -82,25 +82,32 @@
 <script>
 import { getList, del } from '@/api/sys/attr/attr-item'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import AddOrUpdate from './components/add-or-update'
+import AddOrUpdate from './add-or-update-item'
 
 export default {
   components: {
     AddOrUpdate,
     Pagination
   },
+  props: {
+    // 数据字典类型id
+    attrTypeId: {
+      type: String,
+      required: true
+    }
+  },
+
   data() {
     return {
       // 查询表单
       queryForm: {
-
+        attrTypeId: this.attrTypeId
       },
       pageIndex: 1,
       pageSize: 10,
       total: 0,
       list: null,
       listLoading: true,
-
       dialogStatus: 'insert'
     }
   },
@@ -156,7 +163,7 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm(`确定对[${row.username}]进行[删除]操作?`, '提示', {
+      this.$confirm(`确定对[${row.title}]进行[删除]操作?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
