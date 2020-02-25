@@ -1,6 +1,15 @@
 import request from '@/utils/request'
 
 const baseUrl = '/sys/attr-items'
+
+export function getAll(params) {
+  return request({
+    url: baseUrl + '/all',
+    method: 'get',
+    params
+  })
+}
+
 export function getList(params) {
   return request({
     url: baseUrl,
@@ -11,7 +20,7 @@ export function getList(params) {
 
 export function getInfo(id = '') {
   return request({
-    url: baseUrl + id,
+    url: baseUrl + '/' + id,
     method: 'get'
   })
 }
@@ -20,10 +29,7 @@ export function insert(params) {
   return request({
     url: baseUrl,
     method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    data: params
+    params
   })
 }
 
@@ -31,16 +37,13 @@ export function update(params) {
   return request({
     url: baseUrl,
     method: 'put',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    data: params
+    params
   })
 }
 
 export function del(id = '') {
   return request({
-    url: baseUrl + id,
+    url: baseUrl + '/' + id,
     method: 'delete'
   })
 }

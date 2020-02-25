@@ -11,7 +11,7 @@
       </el-form-item>
 
       <el-form-item label="父菜单" prop="parentName">
-        <TreeSelect
+        <tree-select
           :props="props"
           :options="menuList"
           :value="temp.parentId"
@@ -124,7 +124,7 @@ export default {
         ],
         parentName: [
           { validator: (rule, value, callback) => {
-            if (!this.temp.parentName || this.temp.parentId === null || this.temp.parentId === undefined) {
+            if (this.temp.parentId === null || this.temp.parentId === undefined) {
               callback(new Error('父级菜单不能为空，请选择父级菜单！'))
             } else {
               callback()

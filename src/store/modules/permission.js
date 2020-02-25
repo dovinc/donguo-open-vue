@@ -64,19 +64,24 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, menuList) {
     return new Promise(resolve => {
-      const dinamicRoutes = []
-      getAsyncRoutes(menuList, dinamicRoutes)
+      const childrenRoutes = []
+      getAsyncRoutes(menuList, childrenRoutes)
       // 404 page must be placed at the end !!!
-      dinamicRoutes.push({ path: '*', redirect: '/404', hidden: true })
-      commit('SET_MENU_ROUTES', dinamicRoutes)
-      resolve(dinamicRoutes)
+      var dynamicRoutes = [{
+        path: '/dynamic',
+        component: Layout
+      }]
+      dynamicRoutes[0].children = childrenRoutes
+      dynamicRoutes.push({ path: '*', redirect: '/404', hidden: true })
+      commit('SET_MENU_ROUTES', childrenRoutes)
+      resolve(dynamicRoutes)
     })
   },
-  setPermissions({ commit }, Permissions) {
+  setPermissions({ commit }, permissions) {
     return new Promise(resolve => {
     // 临时将权限设置 放在此处
-      commit('SET_PERMISSIONS', Permissions)
-      resolve(Permissions)
+      commit('SET_PERMISSIONS', permissions)
+      resolve(permissions)
     })
   }
 }
@@ -96,9 +101,9 @@ function getAsyncRoutes(menuList = [], routes = []) {
     currentMenu.url = currentMenu.url.replace(/^\//, '')
     var route = {
       path: '/' + currentMenu.path,
-
-      component: Layout,
+      component: _import('dir-route-fix/index'),
       name: currentMenu.path,
+      // redirect: 'noRedirect',
       meta: {
         menuId: currentMenu.menuId,
         title: currentMenu.name,
@@ -119,7 +124,7 @@ function getAsyncRoutes(menuList = [], routes = []) {
           const component = _import(`${currentMenu.url}`)
           route['component'] = component
         } else {
-          route['component'] = Layout
+          route['redirect'] = 'noRedirect'
         }
       } catch (e) {
         console.log('err:' + e)

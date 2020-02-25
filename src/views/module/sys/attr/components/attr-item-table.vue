@@ -1,18 +1,25 @@
 <template>
-  <div class="app-container">
+  <div style="width:100%;">
     <div class="filter-container">
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleAddOrUpdate()">
-        新增
-      </el-button>
-      <el-button size="small" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleDelete()">
-        删除
-      </el-button>
-    </div>
 
+      <el-form ref="dataForm" :inline="true" label-position="right" size="mini" label-width="80px">
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAddOrUpdate()" />
+            <el-button type="primary" size="mini" @click="handlePreview()">{{ previewButtonText }}</el-button>
+          </el-button-group>
+        </el-form-item>
+        <el-form-item v-if="isPreview" :label="name" prop="code">
+          <my-select v-model="inputValue" :placeholder="placeholder" :attr-type-code="attrTypeCode" />
+        </el-form-item>
+      </el-form>
+
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
+      size="mini"
       border
       fit
       highlight-current-row
@@ -38,20 +45,14 @@
       />
 
       <el-table-column
-        prop="description"
+        prop="remark"
         header-align="center"
         align="center"
-        label="描述"
+        label="备注"
       />
 
       <el-table-column
-        prop="multistage"
-        header-align="center"
-        align="center"
-        label="是否多级"
-      />
 
-      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -60,39 +61,40 @@
       >
         <template slot-scope="{row}">
           <el-button size="mini" type="primary" @click="handleAddOrUpdate(row)">修改</el-button>
-          <el-button v-if="row.userId != 1" size="mini" type="danger" @click="handleDelete(row)">删除</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
 
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="pageIndex" :limit.sync="pageSize" @pagination="getList" />
-    <!-- <el-pagination --element-ui 原始分页
-      :current-page="pageIndex"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="pageSize"
+    <el-pagination
+      v-show="total>0"
+      :small="true"
+      layout="prev, pager, next"
       :total="total"
-      layout="total, sizes, prev, pager, next, jumper"
-      @size-change="sizeChangeHandle"
-      @current-change="currentChangeHandle"
-    /> -->
+      :current-page.sync="pageIndex"
+      :page-size.sync="pageSize"
+      @current-change="getList"
+    />
+
     <add-or-update ref="addOrUpdate" :dialog-status="dialogStatus" @refreshTable="getList" />
+
   </div>
 </template>
 
 <script>
 import { getList, del } from '@/api/sys/attr/attr-item'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import AddOrUpdate from './add-or-update-item'
+import MySelect from '@/components/Attr/Select'
 
 export default {
   components: {
     AddOrUpdate,
-    Pagination
+    MySelect
   },
   props: {
     // 数据字典类型id
-    attrTypeId: {
-      type: String,
+    attrType: {
+      type: Object,
       required: true
     }
   },
@@ -101,14 +103,32 @@ export default {
     return {
       // 查询表单
       queryForm: {
-        attrTypeId: this.attrTypeId
+        attrTypeId: this.attrType.attrTypeId,
+        attrTypeCode: this.attrType.code
       },
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 5,
       total: 0,
       list: null,
       listLoading: true,
-      dialogStatus: 'insert'
+      dialogStatus: 'insert',
+      // 以下为单选框所需属性
+      name: this.attrType.title,
+      placeholder: '请选择' + this.attrType.title,
+      inputValue: null,
+      attrTypeId: this.attrType.attrTypeId,
+      attrTypeCode: this.attrType.code,
+      isPreview: false,
+      previewButtonTexts: ['预览', '关闭']
+    }
+  },
+  computed: {
+    previewButtonText: function() {
+      if (this.isPreview) {
+        return '返回'
+      } else {
+        return '预览'
+      }
     }
   },
 
@@ -150,12 +170,13 @@ export default {
       this.getList()
     },
     handleAddOrUpdate(row) {
+      const temp = Object.assign({}, row) || null // copy obj
       if (row) {
         this.dialogStatus = 'update'
       } else {
         this.dialogStatus = 'insert'
+        temp.attrTypeCode = this.attrType.code
       }
-      const temp = Object.assign({}, row) || null // copy obj
 
       // this.addOrUpdateVisible = true
       this.$nextTick(() => {
@@ -168,15 +189,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        del(row.userId).then((reponse) => {
+        del(row.attrItemId).then((reponse) => {
           const { code, msg } = reponse
           if (reponse && code === 200) {
+            this.getList()
             this.$message({
               message: msg || '删除成功',
               type: 'success',
               duration: 1500,
               onClose: () => {
-                this.getList()
               }
             })
           } else {
@@ -184,8 +205,15 @@ export default {
           }
         })
       }).catch(() => {})
+    },
+    handlePreview() {
+      this.isPreview = !this.isPreview
     }
-
   }
 }
 </script>
+<style lang="scss" scoped>
+.el-form-item.el-form-item--mini{
+  margin-bottom: 0px; // fix the form margin-bottom of Element UI
+}
+</style>

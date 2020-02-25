@@ -30,13 +30,6 @@
         label="名称"
       />
       <el-table-column
-        prop="parentName"
-        header-align="center"
-        align="center"
-        width="120"
-        label="上级菜单"
-      />
-      <el-table-column
         header-align="center"
         align="center"
         label="图标"
@@ -46,7 +39,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="type"
         header-align="center"
         align="center"
         label="类型"

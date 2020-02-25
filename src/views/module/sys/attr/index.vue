@@ -26,7 +26,7 @@
       >
         <!-- 展开行数据 -->
         <template slot-scope="scope">
-          <ItemTable :attr-type-id="scope.row" />
+          <item-table :attr-type="scope.row" />
         </template>
       </el-table-column>
       <el-table-column
@@ -50,14 +50,17 @@
       />
 
       <el-table-column
-        prop="multistage"
         header-align="center"
         align="center"
-        label="是否多级"
-      />
+        label="多级"
+      >
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.multistage === 0" size="small" type="success">是</el-tag>
+          <el-tag v-else-if="scope.row.multistage === 1" size="small" type="info">否</el-tag>
+        </template>
+      </el-table-column>
 
       <el-table-column
-        fixed="right"
         header-align="center"
         align="center"
         width="150"
@@ -163,12 +166,12 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm(`确定对[${row.username}]进行[删除]操作?`, '提示', {
+      this.$confirm(`确定对[${row.title}]进行[删除]操作?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        del(row.userId).then((reponse) => {
+        del(row.attrTypeId).then((reponse) => {
           const { code, msg } = reponse
           if (reponse && code === 200) {
             this.$message({
