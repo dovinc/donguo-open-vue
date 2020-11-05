@@ -39,12 +39,12 @@ router.beforeEach(async(to, from, next) => {
           const userInfo = await store.dispatch('user/getUserInfo')
           const { menuList, permissionList } = userInfo
           // 未使用element-admin中原有的加载路由的方式，使用后端加载路由
-          // generate dinamic routes
-          const dinamicRoutes = await store.dispatch('permission/generateRoutes', menuList)
+          // generate dynamic routes
+          const dynamicRoutes = await store.dispatch('permission/generateRoutes', menuList)
           await store.dispatch('permission/setPermissions', permissionList)
           // dynamically add accessible routes
-          router.addRoutes(dinamicRoutes)
-          console.log('routes', dinamicRoutes)
+          router.addRoutes(dynamicRoutes)
+          console.log('routes', dynamicRoutes)
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
