@@ -3,8 +3,8 @@
     <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="80px">
       <el-form-item label="多级" prop="multistage">
         <el-radio-group v-model="temp.multistage" size="small">
-          <el-radio-button :label="0">是</el-radio-button>
-          <el-radio-button :label="1">否</el-radio-button>
+          <el-radio-button :label="1">是</el-radio-button>
+          <el-radio-button :label="0">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="类型名称" prop="title">
@@ -50,7 +50,7 @@ export default {
         title: '',
         code: '',
         description: '',
-        multistage: 1
+        multistage: 0
       },
       rules: {
         title: [
@@ -89,7 +89,7 @@ export default {
         title: '',
         code: '',
         description: '',
-        multistage: 1
+        multistage: 0
       }
     },
     // 表单提交

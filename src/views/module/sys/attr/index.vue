@@ -55,8 +55,8 @@
         label="多级"
       >
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.multistage === 0" size="small" type="success">是</el-tag>
-          <el-tag v-else-if="scope.row.multistage === 1" size="small" type="info">否</el-tag>
+          <el-tag v-if="scope.row.multistage === 1" size="small" type="success">是</el-tag>
+          <el-tag v-else-if="scope.row.multistage === 0" size="small" type="info">否</el-tag>
         </template>
       </el-table-column>
 

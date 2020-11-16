@@ -92,6 +92,7 @@
 import { getList, del } from '@/api/sys/menu'
 import AddOrUpdate from './components/add-or-update'
 import TableTreeColumn from '@/components/table-tree-column'
+import { list2Tree } from '@/utils/index'
 
 export default {
   components: {
@@ -118,7 +119,7 @@ export default {
       this.listLoading = true
       getList().then(response => {
         const { resultObj } = response
-        this.list = this.treeDataTranslate(resultObj.list, 'menuId')
+        this.list = list2Tree(resultObj.list, 'menuId')
         this.listLoading = false
       })
     },
@@ -158,32 +159,6 @@ export default {
           }
         })
       }).catch(() => {})
-    },
-
-    /**
-     * 一维数组转换为 树形数据
-     */
-    treeDataTranslate(data, id = 'id', pId = 'parentId') {
-      var res = []
-      var temp = {}
-      for (var i = 0; i < data.length; i++) {
-        temp[data[i][id]] = data[i]
-      }
-      for (var j = 0; j < data.length; j++) {
-        if (temp[data[j][pId]] && data[j][id] !== data[j][pId]) {
-          if (!temp[data[j][pId]]['menuList']) {
-            temp[data[j][pId]]['menuList'] = []
-          }
-          if (!temp[data[j][pId]]['_level']) {
-            temp[data[j][pId]]['_level'] = 1
-          }
-          data[j]['_level'] = temp[data[j][pId]]._level + 1
-          temp[data[j][pId]]['menuList'].push(data[j])
-        } else {
-          res.push(data[j])
-        }
-      }
-      return res
     }
   }
 }

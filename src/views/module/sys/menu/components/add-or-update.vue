@@ -136,7 +136,6 @@ export default {
       // 以下为树型下拉框属性
       isClearable: true, // 可清空（可选）
       isAccordion: true, // 可收起（可选）
-      valueId: 20, // 初始ID（可选）
       props: { // 配置项（必选）
         value: 'menuId',
         label: 'name',

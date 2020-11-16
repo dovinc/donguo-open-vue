@@ -10,7 +10,7 @@
           </el-button-group>
         </el-form-item>
         <el-form-item v-if="isPreview" :label="name" prop="code">
-          <my-select v-model="inputValue" :placeholder="placeholder" :attr-type-code="attrTypeCode" />
+          <my-select v-model="inputValue" :tree="attrType.multistage == 1" :placeholder="placeholder" :attr-type-code="attrTypeCode" />
         </el-form-item>
       </el-form>
 

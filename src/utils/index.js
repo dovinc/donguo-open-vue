@@ -105,3 +105,29 @@ export function param2Obj(url) {
       '"}'
   )
 }
+
+/**
+* 一维数组转换为 树形数据
+*/
+export function list2Tree(data, id = 'id', pId = 'parentId', children = 'children') {
+  var res = []
+  var temp = {}
+  for (var i = 0; i < data.length; i++) {
+    temp[data[i][id]] = data[i]
+  }
+  for (var j = 0; j < data.length; j++) {
+    if (temp[data[j][pId]] && data[j][id] !== data[j][pId]) {
+      if (!temp[data[j][pId]][children]) {
+        temp[data[j][pId]][children] = []
+      }
+      if (!temp[data[j][pId]]['_level']) {
+        temp[data[j][pId]]['_level'] = 1
+      }
+      data[j]['_level'] = temp[data[j][pId]]._level + 1
+      temp[data[j][pId]][children].push(data[j])
+    } else {
+      res.push(data[j])
+    }
+  }
+  return res
+}

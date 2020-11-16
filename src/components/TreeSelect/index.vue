@@ -35,7 +35,7 @@ export default {
     options: { type: Array, default: () => { return [] } },
 
     // 初始值
-    value: { type: Number, default: () => { return null } },
+    value: { type: [Number, String], default: () => { return null } },
 
     // 可清空选项
     clearable: { type: Boolean, default: () => { return true } },
